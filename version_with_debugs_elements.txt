@@ -1,0 +1,281 @@
+#include "main.h"
+
+#define DELAY_DEBOUNCE      100000
+#define QUANTITY_SPEEDS     3
+
+uint32_t arr_val_in_reg[QUANTITY_SPEEDS];
+uint32_t value_in_arr = 0;
+int i = 0;
+int j = 0;
+uint8_t push1 = 1;
+uint8_t napr = 1;
+uint8_t n = 0;
+uint32_t clk_p;
+
+void * array_leds[8];
+LPC_GPIO_TypeDef * arra_struct_gpio[8] = {LPC_GPIO3, LPC_GPIO3, LPC_GPIO3, LPC_GPIO3, LPC_GPIO2, LPC_GPIO2, LPC_GPIO2, LPC_GPIO2};
+uint32_t arra_val_for_reg_gpio_led[8] = {0x1, 0x3, 0x7, 0xF, 0x10, 0x30, 0x70, 0xF0};
+
+void create_array_with_speeds(uint32_t time_count, char prefix)
+{
+    if ((time_count <= 100) && (prefix == 'u'))
+        #error "Speed value not correctly!"   
+    uint32_t divider = (prefix == 'm') ? 1000 : 1000000;
+    arr_val_in_reg[i++] = (uint32_t)(((long double)time_count / ((long double)64 * (long double)divider)) * (long double)SystemCoreClock);
+}
+
+void SysTick_Handler(void)
+{
+    if (napr == 1)
+        (n == 63) ? n = 0 : n++;
+    else if (napr == 2)
+        (n == 0) ? n = 63 : n--;
+    LPC_GPIO1->DATA = (n << 5);     //write value in port
+}
+
+// BUT1 PIO2_9
+void PIOINT2_IRQHandler(void)
+{ 
+    while( !(LPC_GPIO2->DATA & 0x200) ){};
+    Delay(DELAY_DEBOUNCE); 
+    switch (napr)
+    {
+        case 1: napr = 2;   
+        OFF_ALL_LEDS;
+        BLUR_OFF;
+        break; 
+
+        case 2: napr = 1;
+        ON_ALL_LEDS;
+        BLUR_ON;
+        break;
+    }
+    clear_interrupt_flag_gpio(2, 9);
+}
+
+
+// BUT2 PIO1_4 
+/*
+void PIOINT1_IRQHandler(void)
+{
+    while( !(LPC_GPIO1->DATA & 0x10) ){};
+    Delay(DELAY_DEBOUNCE);         // Wait BUT1 mechanical vibrations to be set. 
+    switch (push1) 
+    {
+
+    // скорость 1
+    case 1: 
+        __disable_irq();
+        SysTick_Config(2160);                // время счета 2 мс
+        push1 = 2;
+        OFF;
+        ON_ZERO;   
+        __enable_irq();
+    break;
+
+    // скорость 2  
+    case 2: 
+        __disable_irq();
+        SysTick_Config(1080);                // время счета 1 мс
+        push1 = 3;
+        OFF;
+        ON_ONE;   
+        __enable_irq();
+    break;
+
+    // скорость 3  
+    case 3: 
+        __disable_irq();
+        SysTick_Config(270);                // время счета 235 мкс
+        push1 = 1;
+        OFF;
+        ON_TWO;   
+        __enable_irq();
+    break;
+    }
+    clear_interrupt_flag_gpio(1, 4);
+}*/
+
+void PIOINT1_IRQHandler(void)
+{
+    while( !(LPC_GPIO1->DATA & 0x10) ){};
+    Delay(DELAY_DEBOUNCE);         // Wait BUT1 mechanical vibrations to be set. 
+    __disable_irq();
+    value_in_arr = arr_val_in_reg[j];
+    arra_struct_gpio[j]->DATA &= ~arra_val_for_reg_gpio_led[j];
+    set_light_digital_on_indicator(j);
+    SysTick_Config(arr_val_in_reg[j++]);
+    if(j == QUANTITY_SPEEDS)
+    {
+        j = 0;
+        OFF_ALL_LEDS;
+    }
+    __enable_irq();
+    clear_interrupt_flag_gpio(1, 4);
+}
+
+
+int main (void)
+{   
+    init_hardware();
+    init_interrupt();
+    OFF;
+    BLUR_OFF;
+    clk_p = SystemCoreClock;  
+    create_array_with_speeds(2, 'm');
+    create_array_with_speeds(1, 'm');
+    create_array_with_speeds(500, 'u');
+    while(1)
+    {      
+        
+    }
+}
+
+void set_light_digital_on_indicator(uint8_t val_on_indicator)
+{
+    switch(val_on_indicator)
+    {
+        case 0: OFF; ON_ZERO;   break;
+        case 1: OFF; ON_ONE;    break;
+        case 2: OFF; ON_TWO;    break;
+        case 3: OFF; ON_THREE;  break;
+        case 4: OFF; ON_FOUR;   break;
+        case 5: OFF; ON_FIVE;   break;
+        case 6: OFF; ON_SIX;    break;
+        case 7: OFF; ON_SEVEN;  break;
+        case 8: OFF; ON_EIGHT;  break;
+        case 9: OFF; ON_NINE;   break;
+    }
+}
+
+void init_interrupt(void)
+{
+    init_external_interrupt(2, 9);
+    init_external_interrupt(1, 4);
+    NVIC_EnableIRQ(EINT2_IRQn);
+    NVIC_EnableIRQ(EINT1_IRQn);
+    __enable_irq();
+}
+
+void Delay(volatile unsigned long cycles)
+{
+  while(cycles)
+  {
+    cycles--;
+  }
+}
+
+void up_to_external_oscillator(void)
+{
+    LPC_SYSCON->MAINCLKSEL &= ~0x3;     //main clock->irc если pll не заработает
+    
+    LPC_SYSCON->MAINCLKUEN &= ~0x1;      //clear update main clock
+    LPC_SYSCON->MAINCLKUEN |= 0x1;      //update main clock
+    
+    LPC_SYSCON->SYSPLLCLKSEL |= 0x1;    //use system oscillator
+    
+    LPC_SYSCON->SYSPLLCLKUEN &= ~0x1;    //clear update pll main clock
+    LPC_SYSCON->SYSPLLCLKUEN |= 0x1;    //update pll main clock
+    
+    LPC_SYSCON->SYSAHBCLKDIV = 0x1;     //divider clk for core
+    LPC_SYSCON->PDRUNCFG |= (1UL<<7);   //system pll powered down
+    LPC_SYSCON->SYSPLLCTRL = 0x25;
+    LPC_SYSCON->PDRUNCFG &= ~(1UL<<7);  //system pll powered
+    while((LPC_SYSCON->SYSPLLSTAT & 0x1) == 0)  //wait unlocked pll
+        ;
+    LPC_SYSCON->MAINCLKSEL |= 0x3;
+    
+    LPC_SYSCON->MAINCLKUEN &= ~0x1; 
+    LPC_SYSCON->MAINCLKUEN |= 0x1;    
+}
+
+void up_to_external_oscillator_2(void)
+{
+    LPC_SYSCON->PDRUNCFG |= 0x20;   //power down
+    LPC_SYSCON->SYSOSCCTRL = 0x0;   // Oscillator is not bypassed, 1 - 20 MHz frequency range
+    LPC_SYSCON->PDRUNCFG &= ~0x20;  // SYSOSC_PD = 0 -> System oscillator is Powered
+    LPC_SYSCON->PDRUNCFG |= 80;     // Set SYSPLL_PD
+    // 2. Select the System PLL clock source:
+    LPC_SYSCON->SYSPLLCLKUEN &= ~0x1;  // No change 
+    LPC_SYSCON->SYSPLLCLKSEL = 0x1;
+    LPC_SYSCON->SYSPLLCLKUEN |= 0x1;   // Update clock source 
+    LPC_SYSCON->SYSPLLCTRL |= 0x20;
+    LPC_SYSCON->SYSPLLCTRL &= ~0x60;
+    LPC_SYSCON->SYSPLLCTRL |= 0x5;
+    LPC_SYSCON->PDRUNCFG &= ~0x00000080;
+    while(!(LPC_SYSCON->SYSPLLSTAT & 0x000000001))
+    {}  //If 1 -> PLL locked
+    LPC_SYSCON->SYSAHBCLKDIV |= 0x1;
+    LPC_SYSCON->MAINCLKUEN &= ~0x00000001;    // No change
+    LPC_SYSCON->MAINCLKSEL = 0x00000003;      // Main clock source select register -> System PLL clock out
+    LPC_SYSCON->MAINCLKUEN |= 0x00000001;     // Update clock source
+        
+    
+}
+
+void clear_interrupt_flag_gpio(uint8_t port, uint8_t pin)
+{
+    LPC_GPIO[port]->IC = (1UL << pin);
+}
+
+void init_external_interrupt(uint8_t port, uint8_t pin)
+{
+    LPC_GPIO[port]->IS  &= ~(1UL << pin);
+    LPC_GPIO[port]->IEV |= (1UL << pin);
+    LPC_GPIO[port]->IE  |= (1UL << pin);
+    LPC_GPIO[port]->IC  |= (1UL << pin);
+}
+
+void init_hardware(void)
+{
+    up_to_external_oscillator();
+    SystemCoreClockUpdate();
+    LPC_SYSCON->SYSAHBCLKCTRL |= (1UL<<MACRO_IOCON);
+    GPIOInit();
+    init_pins_on_phase_shifter();
+    init_pins_with_indicator();
+    init_pins_with_buttons();
+    init_pins_with_leds();
+    LPC_GPIO1->DATA = 0xFC0;
+}
+
+
+void init_pins_with_indicator(void)
+{
+    GPIOSetDir(PORT0, PIN_7, OUTPUT);
+    GPIOSetDir(PORT0, PIN_8, OUTPUT);
+    GPIOSetDir(PORT0, PIN_9, OUTPUT);
+    GPIOSetDir(PORT0, PIN_4, OUTPUT);
+    GPIOSetDir(PORT0, PIN_3, OUTPUT);
+    GPIOSetDir(PORT0, PIN_2, OUTPUT);
+    GPIOSetDir(PORT0, PIN_5, OUTPUT);
+    GPIOSetDir(PORT2, PIN_0, OUTPUT);      
+}
+
+void init_pins_on_phase_shifter(void)
+{
+    GPIOSetDir(PORT1, PIN_5, OUTPUT);
+    GPIOSetDir(PORT1, PIN_6, OUTPUT);
+    GPIOSetDir(PORT1, PIN_7, OUTPUT);
+    GPIOSetDir(PORT1, PIN_8, OUTPUT);
+    GPIOSetDir(PORT1, PIN_9, OUTPUT);
+    GPIOSetDir(PORT1, PIN_10, OUTPUT);
+}
+
+void init_pins_with_buttons(void)
+{
+    GPIOSetDir(PORT2, PIN_9, INPUT);
+    GPIOSetDir(PORT1, PIN_4, INPUT);
+}
+
+void init_pins_with_leds(void)
+{
+    GPIOSetDir(PORT3, PIN_0, OUTPUT);
+    GPIOSetDir(PORT3, PIN_1, OUTPUT);
+    GPIOSetDir(PORT3, PIN_2, OUTPUT);
+    GPIOSetDir(PORT3, PIN_3, OUTPUT);
+    GPIOSetDir(PORT2, PIN_4, OUTPUT);
+    GPIOSetDir(PORT2, PIN_5, OUTPUT);
+    GPIOSetDir(PORT2, PIN_6, OUTPUT);
+    GPIOSetDir(PORT2, PIN_7, OUTPUT);   
+}
