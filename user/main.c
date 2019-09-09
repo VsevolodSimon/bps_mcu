@@ -108,7 +108,7 @@ void Delay(volatile unsigned long cycles)
 
 void up_to_external_oscillator(void)
 {
-    LPC_SYSCON->MAINCLKSEL &= ~0x3;     //main clock->irc åñëè pll íå çàðàáîòàåò
+    LPC_SYSCON->MAINCLKSEL &= ~0x3;     //main clock->irc Ã¥Ã±Ã«Ã¨ pll Ã­Ã¥ Ã§Ã Ã°Ã Ã¡Ã®Ã²Ã Ã¥Ã²
     
     LPC_SYSCON->MAINCLKUEN &= ~0x1;      //clear update main clock
     LPC_SYSCON->MAINCLKUEN |= 0x1;      //update main clock
