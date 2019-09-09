@@ -1,34 +1,0 @@
-Dependencies for Project 'p_1', Target 'Target 1': (DO NOT MODIFY !)
-F (.\user\main.c)(0x5B325B0F)(-c --cpu Cortex-M3 -g -O0 --apcs=interwork --split_sections -I ..\bps_3 -I .\lib -I .\lib\gpio -I .\user-I D:\ARM\manufacturers\LPC\lpc1343\bps_3\RTE-I C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.5.0\CMSIS\Include-I C:\Keil_v5\ARM\PACK\Keil\LPC1300_DFP\1.1.0\Device\Include\LPC13xx-D__UVISION_VERSION="520" -D_RTE_-o .\objects\main.o --omf_browse .\objects\main.crf --depend .\objects\main.d)
-I (..\bps_3\main.h)(0x5B32374B)
-I (C:\Keil_v5\ARM\PACK\Keil\LPC1300_DFP\1.1.0\Device\Include\LPC13xx\LPC13xx.h)(0x57C938B8)
-I (C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.5.0\CMSIS\Include\core_cm3.h)(0x5625FD5C)
-I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x56FE892E)
-I (C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.5.0\CMSIS\Include\core_cmInstr.h)(0x5625E9A0)
-I (C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.5.0\CMSIS\Include\cmsis_armcc.h)(0x5625E9A0)
-I (C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.5.0\CMSIS\Include\core_cmFunc.h)(0x5625E9A0)
-I (C:\Keil_v5\ARM\PACK\Keil\LPC1300_DFP\1.1.0\Device\Include\LPC13xx\system_LPC13xx.h)(0x57C938B8)
-I (..\bps_3\gpio_lpc.h)(0x5B2B7824)
-I (.\lib\gpio\gpio.h)(0x5B2BAA5D)
-I (C:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x56FE892E)
-F (.\gpio_lpc.c)(0x5AEAC101)(-c --cpu Cortex-M3 -g -O0 --apcs=interwork --split_sections -I ..\bps_3 -I .\lib -I .\lib\gpio -I .\user-I D:\ARM\manufacturers\LPC\lpc1343\bps_3\RTE-I C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.5.0\CMSIS\Include-I C:\Keil_v5\ARM\PACK\Keil\LPC1300_DFP\1.1.0\Device\Include\LPC13xx-D__UVISION_VERSION="520" -D_RTE_-o .\objects\gpio_lpc.o --omf_browse .\objects\gpio_lpc.crf --depend .\objects\gpio_lpc.d)
-I (gpio_lpc.h)(0x5B2B7824)
-F (.\lib\gpio\gpio.c)(0x5D710402)(-c --cpu Cortex-M3 -g -O0 --apcs=interwork --split_sections -I ..\bps_3 -I .\lib -I .\lib\gpio -I .\user-I D:\ARM\manufacturers\LPC\lpc1343\bps_3\RTE-I C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.5.0\CMSIS\Include-I C:\Keil_v5\ARM\PACK\Keil\LPC1300_DFP\1.1.0\Device\Include\LPC13xx-D__UVISION_VERSION="520" -D_RTE_-o .\objects\gpio.o --omf_browse .\objects\gpio.crf --depend .\objects\gpio.d)
-I (lib\gpio\gpio.h)(0x5B2BAA5D)
-I (C:\Keil_v5\ARM\PACK\Keil\LPC1300_DFP\1.1.0\Device\Include\LPC13xx\LPC13xx.h)(0x57C938B8)
-I (C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.5.0\CMSIS\Include\core_cm3.h)(0x5625FD5C)
-I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x56FE892E)
-I (C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.5.0\CMSIS\Include\core_cmInstr.h)(0x5625E9A0)
-I (C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.5.0\CMSIS\Include\cmsis_armcc.h)(0x5625E9A0)
-I (C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.5.0\CMSIS\Include\core_cmFunc.h)(0x5625E9A0)
-I (C:\Keil_v5\ARM\PACK\Keil\LPC1300_DFP\1.1.0\Device\Include\LPC13xx\system_LPC13xx.h)(0x57C938B8)
-F (.\lib\gpio\gpio.h)(0x5B2BAA5D)()
-F (RTE\Device\LPC1343FBD48\startup_LPC13xx.s)(0x5AEC6877)(--cpu Cortex-M3 -g --apcs=interwork -I D:\ARM\manufacturers\LPC\lpc1343\bps_3\RTE-I C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.5.0\CMSIS\Include-I C:\Keil_v5\ARM\PACK\Keil\LPC1300_DFP\1.1.0\Device\Include\LPC13xx--pd "__UVISION_VERSION SETA 520" --pd "_RTE_ SETA 1"--list .\listings\startup_lpc13xx.lst --xref -o .\objects\startup_lpc13xx.o --depend .\objects\startup_lpc13xx.d)
-F (RTE\Device\LPC1343FBD48\system_LPC13xx.c)(0x57C938B8)(-c --cpu Cortex-M3 -g -O0 --apcs=interwork --split_sections -I ..\bps_3 -I .\lib -I .\lib\gpio -I .\user-I D:\ARM\manufacturers\LPC\lpc1343\bps_3\RTE-I C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.5.0\CMSIS\Include-I C:\Keil_v5\ARM\PACK\Keil\LPC1300_DFP\1.1.0\Device\Include\LPC13xx-D__UVISION_VERSION="520" -D_RTE_-o .\objects\system_lpc13xx.o --omf_browse .\objects\system_lpc13xx.crf --depend .\objects\system_lpc13xx.d)
-I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x56FE892E)
-I (C:\Keil_v5\ARM\PACK\Keil\LPC1300_DFP\1.1.0\Device\Include\LPC13xx\LPC13xx.h)(0x57C938B8)
-I (C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.5.0\CMSIS\Include\core_cm3.h)(0x5625FD5C)
-I (C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.5.0\CMSIS\Include\core_cmInstr.h)(0x5625E9A0)
-I (C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.5.0\CMSIS\Include\cmsis_armcc.h)(0x5625E9A0)
-I (C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.5.0\CMSIS\Include\core_cmFunc.h)(0x5625E9A0)
-I (C:\Keil_v5\ARM\PACK\Keil\LPC1300_DFP\1.1.0\Device\Include\LPC13xx\system_LPC13xx.h)(0x57C938B8)
