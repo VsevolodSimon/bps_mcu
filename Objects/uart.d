@@ -1,0 +1,16 @@
+.\objects\uart.o: uart.c
+.\objects\uart.o: uart.h
+.\objects\uart.o: main.h
+.\objects\uart.o: C:\Keil_v5\ARM\PACK\Keil\LPC1300_DFP\1.1.0\Device\Include\LPC13xx\LPC13xx.h
+.\objects\uart.o: C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.5.0\CMSIS\Include\core_cm3.h
+.\objects\uart.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+.\objects\uart.o: C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.5.0\CMSIS\Include\core_cmInstr.h
+.\objects\uart.o: C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.5.0\CMSIS\Include\cmsis_armcc.h
+.\objects\uart.o: C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.5.0\CMSIS\Include\core_cmFunc.h
+.\objects\uart.o: C:\Keil_v5\ARM\PACK\Keil\LPC1300_DFP\1.1.0\Device\Include\LPC13xx\system_LPC13xx.h
+.\objects\uart.o: gpio_lpc.h
+.\objects\uart.o: .\lib\gpio\gpio.h
+.\objects\uart.o: adc.h
+.\objects\uart.o: main.h
+.\objects\uart.o: uart.h
+.\objects\uart.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
